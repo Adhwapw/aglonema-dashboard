@@ -189,3 +189,72 @@ body {
 
 /* Lucide icon sizing default */
 .lucide { stroke-width: 2; }
+
+/* ============================================================
+   Splash / intro - perangkat IoT menyirami tanaman
+   ============================================================ */
+.splash {
+  position: fixed; inset: 0; z-index: 100;
+  background: #022c22;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: .9rem; padding: 2rem; cursor: pointer;
+  transition: opacity .6s ease, visibility .6s ease;
+}
+.splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.splash .scene { width: min(80vw, 360px); height: auto; }
+.splash-title {
+  font-family: "Plus Jakarta Sans", -apple-system, sans-serif;
+  font-weight: 800; font-size: 1.5rem; letter-spacing: .22em; text-indent: .22em;
+  color: #ecfdf5; margin: 0;
+  animation: splash-rise .7s ease .25s both;
+}
+.splash-sub {
+  font-size: .72rem; letter-spacing: .3em; text-indent: .3em; text-transform: uppercase;
+  color: #6ee7b7; margin: 0;
+  animation: splash-rise .7s ease .45s both;
+}
+.splash-bar {
+  width: 180px; height: 4px; border-radius: 9999px;
+  background: #064e3b; overflow: hidden;
+}
+.splash-bar > span {
+  display: block; height: 100%; width: 0; border-radius: 9999px;
+  background: #34d399;
+  animation: splash-fill 2.5s linear .1s forwards;
+}
+@keyframes splash-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes splash-fill { to { width: 100%; } }
+@keyframes drop-fall {
+  0% { transform: translateY(0); opacity: 0; }
+  18% { opacity: 1; }
+  78% { opacity: 1; }
+  100% { transform: translateY(54px); opacity: 0; }
+}
+.drop { animation: drop-fall 1.15s linear infinite; }
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.leaf { animation: leaf-sway 2.6s ease-in-out infinite; }
+@keyframes led-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .25; }
+}
+.led { animation: led-blink 1.2s ease-in-out infinite; }
+@keyframes wifi-pulse {
+  0%, 100% { opacity: .25; }
+  50% { opacity: 1; }
+}
+.wifi-arc { animation: wifi-pulse 1.8s ease-in-out infinite; }
+@keyframes meter-fill {
+  from { transform: scaleX(.25); }
+  to { transform: scaleX(1); }
+}
+.meter-fill { animation: meter-fill 2.2s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) {
+  .splash .scene *, .splash-title, .splash-sub, .splash-bar > span { animation: none !important; }
+}
