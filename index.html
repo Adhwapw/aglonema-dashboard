@@ -15,6 +15,54 @@
 </head>
 <body class="bg-slate-100 text-slate-800">
 
+<!-- ============ SPLASH / INTRO ============ -->
+<div id="splash" class="splash" role="status" aria-label="Memuat TetraSense">
+  <svg class="scene" viewBox="0 0 420 320" fill="none" aria-hidden="true">
+    <!-- tanah -->
+    <ellipse cx="280" cy="270" rx="112" ry="14" fill="#064e3b"/>
+    <!-- selang dari perangkat ke tanaman -->
+    <path d="M84 168 C84 112 148 92 212 100 C244 104 264 118 268 140" stroke="#0d9488" stroke-width="9" stroke-linecap="round"/>
+    <!-- perangkat IoT -->
+    <rect x="52" y="170" width="64" height="86" rx="10" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+    <rect x="62" y="184" width="44" height="26" rx="4" fill="#064e3b"/>
+    <rect class="meter-fill" x="66" y="198" width="36" height="8" rx="4" fill="#34d399" style="transform-box:fill-box; transform-origin:left center;"/>
+    <circle class="led" cx="98" cy="230" r="4" fill="#22c55e"/>
+    <circle cx="70" cy="230" r="4" fill="#475569"/>
+    <rect x="62" y="240" width="44" height="6" rx="3" fill="#334155"/>
+    <line x1="84" y1="170" x2="84" y2="142" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="84" cy="140" r="3.5" fill="#94a3b8"/>
+    <path class="wifi-arc" style="animation-delay:0s" d="M73 132 A11 11 0 0 1 95 132" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+    <path class="wifi-arc" style="animation-delay:.3s" d="M67 132 A17 17 0 0 1 101 132" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+    <path class="wifi-arc" style="animation-delay:.6s" d="M61 132 A23 23 0 0 1 107 132" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+    <!-- nosel -->
+    <rect x="261" y="136" width="14" height="20" rx="4" fill="#5eead4"/>
+    <!-- tetesan air -->
+    <ellipse class="drop" style="animation-delay:0s" cx="266" cy="162" rx="4" ry="6" fill="#7dd3fc"/>
+    <ellipse class="drop" style="animation-delay:.38s" cx="271" cy="162" rx="4" ry="6" fill="#7dd3fc"/>
+    <ellipse class="drop" style="animation-delay:.76s" cx="268" cy="162" rx="4" ry="6" fill="#bae6fd"/>
+    <!-- pot -->
+    <path d="M238 214 L322 214 L310 264 L250 264 Z" fill="#0f766e"/>
+    <rect x="230" y="204" width="100" height="14" rx="7" fill="#14b8a6"/>
+    <ellipse cx="280" cy="212" rx="42" ry="10" fill="#44403c"/>
+    <!-- daun aglonema bergoyang -->
+    <g class="leaf" style="transform-origin:280px 208px; animation-delay:0s">
+      <path d="M280 208 C270 162 272 122 280 90 C288 122 290 162 280 208 Z" fill="#10b981"/>
+    </g>
+    <g class="leaf" style="transform-origin:280px 208px; animation-delay:.35s">
+      <path d="M280 208 C256 178 242 152 230 120 C260 130 276 162 280 208 Z" fill="#059669"/>
+    </g>
+    <g class="leaf" style="transform-origin:280px 208px; animation-delay:.7s">
+      <path d="M280 208 C304 178 318 152 330 120 C300 130 284 162 280 208 Z" fill="#34d399"/>
+    </g>
+    <g class="leaf" style="transform-origin:280px 208px; animation-delay:1s">
+      <path d="M280 208 C268 186 262 168 260 148 C274 160 280 182 280 208 Z" fill="#6ee7b7"/>
+    </g>
+  </svg>
+  <p class="splash-title">TETRASENSE</p>
+  <p class="splash-sub">Smart Soil Monitoring</p>
+  <div class="splash-bar"><span></span></div>
+</div>
+
 <div class="flex min-h-screen">
 
   <!-- ============ SIDEBAR ============ -->
@@ -209,6 +257,7 @@
   </div>
 </div>
 
+<script src="js/splash.js"></script>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/charts.js"></script>
