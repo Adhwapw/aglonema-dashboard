@@ -39,6 +39,26 @@ const BlynkApi = (() => {
     return { ok: true, value: isNaN(v) ? null : v, status: r.status, error: '' };
   }
 
+  /** Baca beberapa datastream sekaligus dalam 1 request (lebih hemat).
+      GET /external/api/get?token=..&V0&V4&V5 -> {"v0":58,"v4":0,"v5":1}
+      @returns {Promise<{ok, values:{pin:number|null}, status, error}>} */
+  async function getPins(pins) {
+    const r = await request('get', pins.join('&'));
+    if (!r.ok) return { ok: false, values: {}, status: r.status, error: r.error };
+    try {
+      const obj = JSON.parse(r.text);
+      const values = {};
+      pins.forEach(p => {
+        const key = Object.keys(obj).find(k => k.toLowerCase() === p.toLowerCase());
+        const v = key === undefined ? NaN : parseFloat(obj[key]);
+        values[p] = isNaN(v) ? null : v;
+      });
+      return { ok: true, values, status: r.status, error: '' };
+    } catch (e) {
+      return { ok: false, values: {}, status: r.status, error: 'Respons tidak valid' };
+    }
+  }
+
   /** Tulis satu datastream. */
   async function updatePin(pin, val) {
     return request('update', pin + '=' + encodeURIComponent(val));
@@ -65,5 +85,5 @@ const BlynkApi = (() => {
     return 'Server mengembalikan HTTP ' + status + '.';
   }
 
-  return { request, getPin, updatePin, isHardwareConnected, getHistory, errorHint };
+  return { request, getPin, getPins, updatePin, isHardwareConnected, getHistory, errorHint };
 })();
