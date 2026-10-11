@@ -12,7 +12,9 @@ const App = (() => {
     pumpOn: null,     // status pompa (V4)
     autoMode: null,   // mode otomatis (V5)
     online: null,     // koneksi hardware
-    busy: false       // sedang mengirim perintah
+    busy: false,      // sedang mengirim perintah
+    pendingPump: null,  // target perintah pompa yang menunggu konfirmasi V4
+    pendingUntil: 0
   };
 
   let timer = null;
@@ -55,20 +57,36 @@ const App = (() => {
     }
     if (rC.ok) state.online = rC.value;
 
+    // Konfirmasi perintah pompa: tahan tampilan optimistic sampai V4 dari
+    // device cocok dengan perintah, atau sampai batas waktu habis.
+    let pendingNote = '';
+    if (state.pendingPump !== null) {
+      const confirmed = rS.ok && ((rS.value === 1) === (state.pendingPump === 1));
+      if (confirmed) {
+        state.pendingPump = null;
+      } else if (Date.now() > state.pendingUntil) {
+        state.pendingPump = null;
+        pendingNote = UI.alert('warning', '<strong>Perintah terkirim</strong>, tetapi device belum mengonfirmasi status pompa. Periksa koneksi Wio Terminal.');
+      } else {
+        state.pumpOn = state.pendingPump === 1;
+        UI.setPumpStatus(state.pumpOn);
+      }
+    }
+
     UI.setDevicePill(rC.ok ? rC.value : null);
     UI.setPumpButton(state.pumpOn, !!state.autoMode, state.busy);
 
     const failed = [rM, rS, rA, rC].filter(r => !r.ok);
+    let html;
     if (failed.length === 4) {
-      UI.show(UI.alert('danger', '<strong>Gagal mengambil data.</strong> ' + BlynkApi.errorHint(failed[0].status)));
+      html = UI.alert('danger', '<strong>Gagal mengambil data.</strong> ' + BlynkApi.errorHint(failed[0].status));
     } else if (failed.length > 0) {
-      UI.show(
-        UI.buildSmartAlerts(state.moisture, state.online, true) +
-        UI.alert('warning', '<strong>Sebagian data gagal dimuat.</strong> ' + BlynkApi.errorHint(failed[0].status))
-      );
+      html = UI.buildSmartAlerts(state.moisture, state.online, true) +
+        UI.alert('warning', '<strong>Sebagian data gagal dimuat.</strong> ' + BlynkApi.errorHint(failed[0].status));
     } else {
-      UI.show(UI.buildSmartAlerts(state.moisture, state.online, true));
+      html = UI.buildSmartAlerts(state.moisture, state.online, true);
     }
+    UI.show(html + pendingNote);
 
     $('lastUpdate').textContent = 'Terakhir diperbarui: ' + fmtClock(new Date());
     $('serverInfo').textContent = Settings.data.server.replace(/^https?:\/\//, '');
@@ -104,7 +122,19 @@ const App = (() => {
       return;
     }
     UI.setPumpButton(state.pumpOn, !!state.autoMode, false);
-    setTimeout(refresh, 800); // konfirmasi cepat, bukan 2 detik
+
+    // Tunggu konfirmasi V4 dari device: cek tiap 2 detik, maks 20 detik.
+    // Selama itu tampilan optimistic dipertahankan oleh refresh().
+    state.pendingPump = target;
+    state.pendingUntil = Date.now() + 20000;
+    const poll = setInterval(() => {
+      if (state.pendingPump === null || Date.now() > state.pendingUntil) {
+        clearInterval(poll);
+        return;
+      }
+      refresh();
+    }, 2000);
+    setTimeout(refresh, 1200);
   }
 
   async function setAutoMode(on) {
