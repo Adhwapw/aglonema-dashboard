@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aglonema Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+<div class="flex min-h-screen">
+
+  <!-- ============ SIDEBAR ============ -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <span class="brand-icon"><i data-lucide="leaf"></i></span>
+      <div>
+        <p class="brand-title">Aglonema Monitor</p>
+        <p class="brand-sub">Soil Moisture IoT</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-link active" data-view="dashboard">
+        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+      </a>
+      <a class="nav-link" data-view="riwayat">
+        <i data-lucide="history"></i><span>Riwayat</span>
+      </a>
+      <a class="nav-link" data-view="pengaturan">
+        <i data-lucide="settings"></i><span>Pengaturan</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <p>Zona optimal aglonema<br /><span class="text-emerald-400 font-semibold">55% &ndash; 65%</span> kelembapan tanah</p>
+    </div>
+  </aside>
+
+  <!-- ============ KONTEN UTAMA ============ -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <header class="topbar">
+      <button id="menuBtn" class="icon-btn md:hidden" aria-label="Menu">
+        <i data-lucide="menu"></i>
+      </button>
+      <h1 id="pageTitle" class="page-title">Dashboard</h1>
+      <div class="ml-auto flex items-center gap-2 md:gap-3">
+        <span id="deviceStatus" class="badge badge-gray"><span class="dot bg-slate-400"></span>Memeriksa...</span>
+        <span id="lastUpdate" class="hidden lg:inline text-xs text-slate-500"></span>
+        <button id="refreshBtn" class="btn btn-outline btn-sm" title="Muat ulang sekarang">
+          <i data-lucide="refresh-cw"></i><span class="hidden sm:inline">Refresh</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="p-4 md:p-6 space-y-5 flex-1">
+      <div id="alertArea"></div>
+
+      <!-- ===== VIEW: DASHBOARD ===== -->
+      <section id="view-dashboard" class="space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          <div class="card p-5">
+            <p class="card-title">Kelembapan Tanah</p>
+            <p class="card-sub mb-1">Sensor &middot; persen</p>
+            <div id="gaugeMoist" class="gauge-box"></div>
+            <p id="zoneLabel" class="zone-label">-</p>
+          </div>
+
+          <div class="card p-5 flex flex-col">
+            <p class="card-title">Kontrol Pompa</p>
+            <p class="card-sub mb-4">Penyiraman dan mode operasi</p>
+            <div class="space-y-3 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-600">Status pompa</span>
+                <span id="pumpStatus" class="badge badge-gray">-</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-600">Mode operasi</span>
+                <span id="modeStatus" class="badge badge-gray">-</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-600">Mode otomatis</span>
+                <label class="switch"><input type="checkbox" id="modeSwitch" /><span class="slider"></span></label>
+              </div>
+            </div>
+            <div class="mt-5 pt-4 border-t border-slate-200">
+              <button id="pumpBtn" class="btn btn-green w-full" disabled>
+                <i data-lucide="power"></i><span>Nyalakan Pompa</span>
+              </button>
+              <p id="pumpNote" class="text-xs text-slate-500 mt-2 leading-relaxed">Nonaktifkan mode otomatis untuk kontrol pompa manual.</p>
+            </div>
+          </div>
+
+          <div class="card p-5">
+            <p class="card-title mb-1">Zona Kelembapan Aglonema</p>
+            <p class="card-sub mb-4">Berdasarkan riset</p>
+            <ul class="space-y-3 text-sm">
+              <li class="zone-row"><span class="dot bg-red-600"></span><span class="text-slate-600">Di bawah 40%</span><span class="ml-auto font-semibold text-slate-800">Terlalu kering</span></li>
+              <li class="zone-row"><span class="dot bg-amber-500"></span><span class="text-slate-600">40% &ndash; 55%</span><span class="ml-auto font-semibold text-slate-800">Kurang optimal</span></li>
+              <li class="zone-row"><span class="dot bg-green-600"></span><span class="text-slate-600">55% &ndash; 65%</span><span class="ml-auto font-semibold text-slate-800">Optimal</span></li>
+              <li class="zone-row"><span class="dot bg-amber-500"></span><span class="text-slate-600">65% &ndash; 80%</span><span class="ml-auto font-semibold text-slate-800">Agak basah</span></li>
+              <li class="zone-row"><span class="dot bg-red-600"></span><span class="text-slate-600">Di atas 80%</span><span class="ml-auto font-semibold text-slate-800">Rawan busuk akar</span></li>
+            </ul>
+            <div class="mt-4 pt-4 border-t border-slate-200">
+              <p class="text-xs text-slate-500 leading-relaxed">Sumber: Binus, &ldquo;Soil Moisture-based IoT Drip Irrigation System for Aglaonema&rdquo; (2024); Skripsi Telkom University (2023).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div class="card p-5 lg:col-span-2">
+            <div class="flex items-center justify-between mb-1">
+              <div>
+                <p class="card-title">Riwayat 24 Jam Terakhir</p>
+                <p class="card-sub">Area hijau menandai zona optimal 55% &ndash; 65%</p>
+              </div>
+              <button id="miniHistBtn" class="btn btn-outline btn-sm">Muat</button>
+            </div>
+            <div id="histMini" class="chart-box"></div>
+          </div>
+
+          <div class="card p-5">
+            <p class="card-title mb-1">Perangkat</p>
+            <p class="card-sub mb-4">Informasi koneksi</p>
+            <dl class="space-y-3 text-sm">
+              <div class="flex justify-between"><dt class="text-slate-500">Hardware</dt><dd class="font-semibold text-slate-800">Wio Terminal</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Platform</dt><dd class="font-semibold text-slate-800">Blynk IoT</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Server</dt><dd id="serverInfo" class="font-semibold text-slate-800 truncate max-w-[10rem]">-</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Refresh otomatis</dt><dd id="intervalInfo" class="font-semibold text-slate-800">-</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Datastream</dt><dd class="font-semibold text-slate-800 text-right">V0 sensor<br />V1 pompa &middot; V4 status &middot; V5 mode</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: RIWAYAT ===== -->
+      <section id="view-riwayat" class="space-y-5 hidden">
+        <div class="card p-5">
+          <div class="flex flex-wrap items-center gap-3 mb-1">
+            <div>
+              <p class="card-title">Riwayat Kelembapan Tanah</p>
+              <p class="card-sub">Data historis dari Blynk &middot; area hijau = zona optimal 55% &ndash; 65%</p>
+            </div>
+            <div class="ml-auto flex items-center gap-2">
+              <select id="periodSelect" class="form-select w-auto">
+                <option value="DAY">1 Hari</option>
+                <option value="WEEK">1 Minggu</option>
+                <option value="THREE_MONTHS">3 Bulan</option>
+              </select>
+              <button id="histBtn" class="btn btn-green btn-sm">Muat Data</button>
+            </div>
+          </div>
+          <div id="histFull" class="chart-box-lg"></div>
+          <div class="alert alert-info mt-4 mb-0">Blynk membatasi pengambilan data historis maksimal <strong>10 kali per 24 jam</strong> per device. Gunakan tombol Muat Data seperlunya.</div>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: PENGATURAN ===== -->
+      <section id="view-pengaturan" class="hidden">
+        <div class="card p-5 md:p-6 max-w-2xl">
+          <p class="card-title mb-1">Pengaturan Koneksi</p>
+          <p class="card-sub mb-5">Data tersimpan di browser ini saja (localStorage).</p>
+          <div class="space-y-4">
+            <div>
+              <label class="form-label" for="tokenInput">Device Auth Token</label>
+              <input type="password" id="tokenInput" class="form-input" placeholder="Tempel auth token dari Blynk.Console" autocomplete="off" />
+              <p class="text-xs text-slate-500 mt-1">Blynk.Console &rarr; Devices &rarr; pilih device &rarr; Device Info.</p>
+            </div>
+            <div>
+              <label class="form-label" for="serverInput">Server Blynk</label>
+              <input type="text" id="serverInput" class="form-input" placeholder="https://blynk.cloud" />
+              <p class="text-xs text-slate-500 mt-1">Jika sering HTTP 500, coba <span class="font-mono">https://sgp1.blynk.cloud</span> (region Asia).</p>
+            </div>
+            <div>
+              <label class="form-label" for="intervalSelect">Interval refresh otomatis</label>
+              <select id="intervalSelect" class="form-select">
+                <option value="30">30 detik</option>
+                <option value="60">60 detik</option>
+                <option value="120">2 menit</option>
+                <option value="300">5 menit</option>
+              </select>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button id="saveBtn" class="btn btn-green">Simpan Pengaturan</button>
+              <button id="testBtn" class="btn btn-outline">Tes Koneksi</button>
+            </div>
+          </div>
+          <div class="alert alert-warning mt-5 mb-0">Auth token tertulis di penyimpanan browser perangkat ini. Jangan bagikan link dashboard ke publik, cukup untuk pemakaian pribadi.</div>
+        </div>
+      </section>
+
+      <footer class="text-center text-xs text-slate-400 pt-2 pb-4">
+        Data via Blynk IoT HTTPS API &middot; Zona optimal 55% &ndash; 65% (Binus, 2024)
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
