@@ -109,9 +109,15 @@ const UI = (() => {
     btn.classList.remove('btn-green', 'btn-red');
     btn.classList.add(pumpOn ? 'btn-red' : 'btn-green');
     if (busy && label) label.textContent = 'Mengirim...';
-    $('pumpNote').textContent = autoMode
-      ? 'Mode otomatis aktif. Nonaktifkan untuk kontrol pompa manual.'
-      : 'Pompa dalam kontrol manual. Perubahan tampil instan, lalu dikonfirmasi ke device.';
+    // Keterangan hanya tampil saat mode otomatis aktif (tombol disabled).
+    // Saat mode manual, keterangan disembunyikan.
+    const note = $('pumpNote');
+    if (autoMode) {
+      note.style.display = '';
+      note.textContent = 'Mode otomatis aktif, tombol pompa dinonaktifkan.';
+    } else {
+      note.style.display = 'none';
+    }
   }
 
   /* ---------- Sidebar & navigasi ---------- */
