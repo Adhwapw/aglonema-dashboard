@@ -57,13 +57,6 @@ body {
   border-bottom: 1px solid #1c222c;
   flex-shrink: 0;
 }
-.brand-icon {
-  width: 2.25rem; height: 2.25rem; border-radius: .7rem;
-  background: #059669;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.brand-icon svg { width: 1.25rem; height: 1.25rem; color: #fff; }
 .brand-title {
   font-family: "Plus Jakarta Sans", -apple-system, sans-serif;
   font-weight: 800; font-size: 1rem; letter-spacing: -.01em;
