@@ -14,6 +14,7 @@ cukup buka `index.html` atau hosting sebagai situs statis.
 - Alert cerdas gaya Bootstrap 4 (kering, optimal, terlalu basah, device offline)
 - Status koneksi device, refresh otomatis
 - Mobile friendly, sidebar off-canvas di layar kecil
+- Animasi intro (splash screen): perangkat IoT menyirami tanaman (~2,8 detik, bisa diklik untuk lewati)
 
 ## Struktur project
 
