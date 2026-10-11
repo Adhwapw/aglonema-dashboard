@@ -34,12 +34,16 @@ const App = (() => {
       return;
     }
 
-    const [rM, rS, rA, rC] = await Promise.all([
-      BlynkApi.getPin(P.moisture),
-      BlynkApi.getPin(P.pumpStatus),
-      BlynkApi.getPin(P.autoMode),
+    // 1 request batch untuk V0+V4+V5 (lebih hemat), + 1 untuk status koneksi.
+    // Jadi tiap refresh hanya 2 request, bukan 4.
+    const [rB, rC] = await Promise.all([
+      BlynkApi.getPins([P.moisture, P.pumpStatus, P.autoMode]),
       BlynkApi.isHardwareConnected()
     ]);
+    const pick = (pin) => rB.ok
+      ? { ok: true, value: rB.values[pin], status: rB.status, error: '' }
+      : { ok: false, value: null, status: rB.status, error: rB.error };
+    const rM = pick(P.moisture), rS = pick(P.pumpStatus), rA = pick(P.autoMode);
 
     if (rM.ok) {
       state.moisture = rM.value;
