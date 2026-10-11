@@ -183,11 +183,15 @@
             <div>
               <label class="form-label" for="intervalSelect">Interval refresh otomatis</label>
               <select id="intervalSelect" class="form-select">
+                <option value="5">5 detik</option>
+                <option value="10">10 detik</option>
+                <option value="15">15 detik</option>
                 <option value="30">30 detik</option>
                 <option value="60">60 detik</option>
                 <option value="120">2 menit</option>
                 <option value="300">5 menit</option>
               </select>
+              <p class="text-xs text-slate-500 mt-1">Interval pendek tidak membuat data lebih baru dari interval kirim Wio Terminal ke Blynk.</p>
             </div>
             <div class="flex flex-wrap gap-2 pt-1">
               <button id="saveBtn" class="btn btn-green">Simpan Pengaturan</button>
