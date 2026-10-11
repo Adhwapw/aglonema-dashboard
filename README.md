@@ -1,4 +1,4 @@
-# Aglonema Monitor
+# TetraSense
 
 Dashboard web untuk monitoring kelembapan tanah dan kontrol pompa penyiraman tanaman aglonema.
 Data diambil dari [Blynk IoT](https://blynk.io) via HTTPS REST API. Tanpa backend, tanpa build step:
