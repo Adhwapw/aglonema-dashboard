@@ -30,7 +30,7 @@ const UI = (() => {
       return out.join('');
     }
     if (online === false) {
-      out.push(alert('danger', '<strong>Device offline.</strong> Wio Terminal tidak terhubung ke Blynk. Periksa daya dan koneksi WiFi perangkat.'));
+      out.push(alert('danger', '<strong>Device offline.</strong> ESP32 tidak terhubung ke Blynk. Periksa daya dan koneksi WiFi perangkat.'));
     }
     if (moisture !== null && moisture !== undefined) {
       const z = zoneOf(moisture);
