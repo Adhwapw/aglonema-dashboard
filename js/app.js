@@ -70,7 +70,7 @@ const App = (() => {
         state.pendingPump = null;
       } else if (Date.now() > state.pendingUntil) {
         state.pendingPump = null;
-        pendingNote = UI.alert('warning', '<strong>Perintah terkirim</strong>, tetapi device belum mengonfirmasi status pompa. Periksa koneksi Wio Terminal.');
+        pendingNote = UI.alert('warning', '<strong>Perintah terkirim</strong>, tetapi device belum mengonfirmasi status pompa. Periksa koneksi ESP32.');
       } else {
         state.pumpOn = state.pendingPump === 1;
         UI.setPumpStatus(state.pumpOn);
