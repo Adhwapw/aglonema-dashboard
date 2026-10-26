@@ -65,7 +65,7 @@ const App = (() => {
     // device cocok dengan perintah, atau sampai batas waktu habis.
     let pendingNote = '';
     if (state.pendingPump !== null) {
-      const confirmed = rS.ok && ((rS.value === 1) === (state.pendingPump === 1));
+      const confirmed = rS.ok && rS.value !== null && ((rS.value === 1) === (state.pendingPump === 1));
       if (confirmed) {
         state.pendingPump = null;
       } else if (Date.now() > state.pendingUntil) {
@@ -243,6 +243,7 @@ const App = (() => {
       }
     });
     UI.refreshIcons();
+    UI.renderZoneList();
     Charts.init();
     initSettingsForm();
 

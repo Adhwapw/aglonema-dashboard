@@ -78,6 +78,7 @@ const Charts = (() => {
   }
 
   function setHistory(chart, points) {
+    if (!chart) return; // ECharts gagal dimuat (CDN terblokir): jangan crash
     chart.setOption(historyOption([
       { name: 'Kelembapan tanah', color: '#059669', points }
     ]), true);

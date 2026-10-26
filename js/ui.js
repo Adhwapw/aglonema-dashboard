@@ -1,5 +1,5 @@
 /* ============================================================
-   ui.js - Komponen UI: alert Bootstrap 4, badge, sidebar
+   ui.js - Komponen UI: alert, badge, sidebar (CSS mandiri, tanpa Bootstrap)
    ============================================================ */
 
 const UI = (() => {
@@ -120,6 +120,17 @@ const UI = (() => {
     }
   }
 
+  /* ---------- Daftar zona (dirender dari AppConfig, bukan hardcode di HTML) ---------- */
+  function renderZoneList() {
+    const ul = $('zoneList');
+    if (!ul) return;
+    ul.innerHTML = AppConfig.zones.map(z =>
+      '<li class="zone-row"><span class="dot" style="background:' + z.color + '"></span>' +
+      '<span class="text-slate-600">' + z.range + '</span>' +
+      '<span class="ml-auto font-semibold text-slate-800">' + z.label + '</span></li>'
+    ).join('');
+  }
+
   /* ---------- Sidebar & navigasi ---------- */
   const TITLES = { dashboard: 'Dashboard', riwayat: 'Riwayat', pengaturan: 'Pengaturan' };
 
@@ -160,6 +171,6 @@ const UI = (() => {
     $, initAlertDismiss, alert, show, clear,
     buildSmartAlerts, setDevicePill, setZoneLabel,
     setPumpStatus, setModeStatus, setPumpButton,
-    initNav, refreshIcons
+    initNav, refreshIcons, renderZoneList
   };
 })();

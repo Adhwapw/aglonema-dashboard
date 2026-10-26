@@ -151,15 +151,9 @@
           <div class="card p-5">
             <p class="card-title mb-1">Zona Kelembapan Aglonema</p>
             <p class="card-sub mb-4">Berdasarkan riset</p>
-            <ul class="space-y-3 text-sm">
-              <li class="zone-row"><span class="dot bg-red-600"></span><span class="text-slate-600">Di bawah 40%</span><span class="ml-auto font-semibold text-slate-800">Terlalu kering</span></li>
-              <li class="zone-row"><span class="dot bg-amber-500"></span><span class="text-slate-600">40% &ndash; 55%</span><span class="ml-auto font-semibold text-slate-800">Kurang optimal</span></li>
-              <li class="zone-row"><span class="dot bg-green-600"></span><span class="text-slate-600">55% &ndash; 65%</span><span class="ml-auto font-semibold text-slate-800">Optimal</span></li>
-              <li class="zone-row"><span class="dot bg-amber-500"></span><span class="text-slate-600">65% &ndash; 80%</span><span class="ml-auto font-semibold text-slate-800">Agak basah</span></li>
-              <li class="zone-row"><span class="dot bg-red-600"></span><span class="text-slate-600">Di atas 80%</span><span class="ml-auto font-semibold text-slate-800">Rawan busuk akar</span></li>
-            </ul>
+            <ul id="zoneList" class="space-y-3 text-sm"><!-- diisi dari AppConfig.zones oleh UI.renderZoneList() --></ul>
             <div class="mt-4 pt-4 border-t border-slate-200">
-              <p class="text-xs text-slate-500 leading-relaxed">Sumber: Binus, &ldquo;Soil Moisture-based IoT Drip Irrigation System for Aglaonema&rdquo; (2024); Skripsi Telkom University (2023).</p>
+              <p class="text-xs text-slate-500 leading-relaxed">Zona optimal 55%&ndash;65%: Karenza et al. (2025). Batas 40% dan 80% ditetapkan tim.</p>
             </div>
           </div>
         </div>
@@ -251,7 +245,7 @@
       </section>
 
       <footer class="text-center text-xs text-slate-400 pt-2 pb-4">
-        Data via Blynk IoT HTTPS API &middot; Zona optimal 55% &ndash; 65% (Binus, 2024)
+        Data via Blynk IoT HTTPS API &middot; Zona optimal 55% &ndash; 65% (Karenza et al., 2025)
       </footer>
     </main>
   </div>

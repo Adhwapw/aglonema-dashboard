@@ -11,7 +11,7 @@ cukup buka `index.html` atau hosting sebagai situs statis.
 - Kontrol pompa manual (optimistic UI: tombol langsung merespons)
 - Toggle mode otomatis / manual
 - Grafik riwayat kelembapan dengan area penanda zona optimal
-- Alert cerdas gaya Bootstrap 4 (kering, optimal, terlalu basah, device offline)
+- Alert cerdas (kering, optimal, terlalu basah, device offline)
 - Status koneksi device, refresh otomatis
 - Mobile friendly, sidebar off-canvas di layar kecil
 - Animasi intro (splash screen): perangkat IoT menyirami tanaman (~2,8 detik, bisa diklik untuk lewati)
@@ -51,9 +51,9 @@ Token hanya tersimpan di `localStorage` browser perangkatmu, tidak tertulis di k
 
 ## Catatan
 
-- Zona optimal 55% - 65% merujuk pada riset Binus (2024):
+- Zona optimal 55% - 65% merujuk pada Karenza et al. (2025), Int. J. Horticultural Science and Technology 12(4):
   *"Soil Moisture-based IoT Drip Irrigation System to Optimize Water Usage for Aglaonema
-  in Greenhouse Environment"* (eksperimen 30 hari, Aglaonema Stardust).
+  in Greenhouse Environment"* (eksperimen 30 hari, Aglaonema Stardust). Batas 40% dan 80% ditetapkan tim.
 - Blynk membatasi pengambilan data historis (`data/get`) maksimal 10x per 24 jam per device.
 - Jika API sering mengembalikan HTTP 500, kemungkinan auth token salah atau akunmu berada
   di server region lain. Coba ganti server ke `https://sgp1.blynk.cloud` (region Asia)
