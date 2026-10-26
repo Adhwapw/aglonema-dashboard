@@ -136,7 +136,10 @@ const UI = (() => {
 
   function initNav(onSwitch) {
     document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', (e) => {
+        // href ada supaya link bisa difokuskan keyboard; navigasi tetap
+        // ditangani JS, jadi perilaku bawaan link dicegah.
+        e.preventDefault();
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         link.classList.add('active');
         const v = link.dataset.view;

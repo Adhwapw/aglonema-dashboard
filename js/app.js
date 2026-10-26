@@ -197,16 +197,17 @@ const App = (() => {
     $('serverInput').value = Settings.data.server;
     $('intervalSelect').value = String(Settings.data.interval);
 
-    $('saveBtn').addEventListener('click', () => {
+    $('saveBtn').addEventListener('click', async () => {
       Settings.save({
         token: $('tokenInput').value.trim(),
         server: $('serverInput').value.trim() || AppConfig.defaults.server,
         interval: parseInt($('intervalSelect').value, 10) || 60
       });
-      UI.show(UI.alert('success', '<strong>Pengaturan disimpan.</strong> Menghubungkan ulang...'));
       restartTimer();
-      refresh();
-      loadHistory(Charts.getMini(), 'DAY');
+      await Promise.allSettled([refresh(), loadHistory(Charts.getMini(), 'DAY')]);
+      // Konfirmasi ditampilkan SETELAH refresh selesai, di atas alert hasil
+      // refresh, supaya tidak langsung tertimpa seperti sebelumnya.
+      UI.show(UI.alert('success', '<strong>Pengaturan disimpan.</strong> Koneksi diperbarui dengan pengaturan baru.') + $('alertArea').innerHTML);
     });
 
     $('testBtn').addEventListener('click', async () => {
