@@ -190,7 +190,7 @@
           <div class="flex flex-wrap items-center gap-3 mb-1">
             <div>
               <p class="card-title">Riwayat Kelembapan Tanah</p>
-              <p class="card-sub">Data historis dari Blynk &middot; area hijau = zona optimal 55% &ndash; 65%</p>
+              <p class="card-sub">Data historis dari Turso &middot; area hijau = zona optimal 55% &ndash; 65%</p>
             </div>
             <div class="ml-auto flex items-center gap-2">
               <select id="periodSelect" class="form-select w-auto">
@@ -202,7 +202,7 @@
             </div>
           </div>
           <div id="histFull" class="chart-box-lg"></div>
-          <div class="alert alert-info mt-4 mb-0">Blynk membatasi pengambilan data historis maksimal <strong>10 kali per 24 jam</strong> per device. Gunakan tombol Muat Data seperlunya.</div>
+          <div class="alert alert-info mt-4 mb-0">Riwayat dibaca dari Turso, tanpa batas pengambilan. Batas 10 kali per 24 jam dari Blynk hanya berlaku sebagai cadangan bila Turso gagal.</div>
         </div>
       </section>
 
@@ -210,7 +210,7 @@
       <section id="view-pengaturan" class="hidden">
         <div class="card p-5 md:p-6 max-w-2xl">
           <p class="card-title mb-1">Pengaturan Koneksi</p>
-          <p class="card-sub mb-5">Data tersimpan di browser ini saja (localStorage).</p>
+          <p class="card-sub mb-5">Pengaturan koneksi tersimpan di browser ini saja (localStorage). Riwayat tersimpan di database Turso.</p>
           <div class="space-y-4">
             <div>
               <label class="form-label" for="tokenInput">Device Auth Token</label>
@@ -220,7 +220,7 @@
             <div>
               <label class="form-label" for="serverInput">Server Blynk</label>
               <input type="text" id="serverInput" class="form-input" placeholder="https://blynk.cloud" />
-              <p class="text-xs text-slate-500 mt-1">Jika sering HTTP 500, coba <span class="font-mono">https://sgp1.blynk.cloud</span> (region Asia).</p>
+              <p class="text-xs text-slate-500 mt-1">Server akun ini adalah https://blynk.cloud. Jangan pindah ke region lain, data live bisa terputus.</p>
             </div>
             <div>
               <label class="form-label" for="intervalSelect">Interval refresh otomatis</label>
@@ -250,7 +250,7 @@
       </section>
 
       <footer class="text-center text-xs text-slate-400 pt-2 pb-4">
-        Data via Blynk IoT HTTPS API &middot; Zona optimal 55% &ndash; 65% (Karenza et al., 2025)
+        Data live via Blynk IoT HTTPS API &middot; Riwayat via Turso &middot; Zona optimal 55% &ndash; 65% (Karenza et al., 2025)
       </footer>
     </main>
   </div>

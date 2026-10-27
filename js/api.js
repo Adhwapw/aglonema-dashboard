@@ -81,7 +81,7 @@ const BlynkApi = (() => {
     if (status === 0) return 'Tidak bisa menghubungi server. Periksa koneksi internet dan alamat server di menu Pengaturan.';
     if (status === 400) return 'Token tidak valid (HTTP 400). Periksa kembali Device Auth Token di menu Pengaturan.';
     if (status === 404) return 'Endpoint tidak ditemukan (HTTP 404). Periksa alamat server di menu Pengaturan.';
-    if (status === 500) return 'Server Blynk mengembalikan HTTP 500. Ini biasanya berarti auth token salah, atau akun Blynk kamu berada di server region lain. Coba ganti Server ke https://sgp1.blynk.cloud (region Asia) di menu Pengaturan.';
+    if (status === 500) return 'Server Blynk mengembalikan HTTP 500. Periksa kembali Device Auth Token di menu Pengaturan. Untuk riwayat Blynk, HTTP 500 juga bisa berarti datastream belum diaktifkan pelaporan historinya. Server akun ini adalah blynk.cloud, bukan region lain.';
     return 'Server mengembalikan HTTP ' + status + '.';
   }
 

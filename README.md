@@ -54,8 +54,10 @@ Token hanya tersimpan di `localStorage` browser perangkatmu, tidak tertulis di k
 - Zona optimal 55% - 65% merujuk pada Karenza et al. (2025), Int. J. Horticultural Science and Technology 12(4):
   *"Soil Moisture-based IoT Drip Irrigation System to Optimize Water Usage for Aglaonema
   in Greenhouse Environment"* (eksperimen 30 hari, Aglaonema Stardust). Batas 40% dan 80% ditetapkan tim.
-- Blynk membatasi pengambilan data historis (`data/get`) maksimal 10x per 24 jam per device.
-- Jika API sering mengembalikan HTTP 500, kemungkinan auth token salah atau akunmu berada
-  di server region lain. Coba ganti server ke `https://sgp1.blynk.cloud` (region Asia)
-  di menu Pengaturan.
+- Riwayat utama kini dicatat sendiri ke Turso; batas 10x per 24 jam dari Blynk
+  hanya berlaku bila dashboard jatuh ke riwayat Blynk sebagai cadangan.
+- Jika API live sering mengembalikan HTTP 500, kemungkinan auth token salah.
+  Server akun ini adalah `https://blynk.cloud`; jangan pindah ke region lain.
+  Untuk riwayat Blynk, HTTP 500 biasanya berarti datastream belum diaktifkan
+  pelaporan historinya di Blynk.Console.
 - Ikon: [Lucide](https://lucide.dev). Font judul: [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans).
