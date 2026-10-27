@@ -1,51 +1,33 @@
 /* ============================================================
-   history.js - Riwayat kelembapan mandiri via Supabase
+   history.js - Riwayat kelembapan mandiri via Turso
    ------------------------------------------------------------
-   Dashboard mencatat sendiri tiap pembacaan live yang sukses,
-   menumpang refresh Blynk yang sudah berjalan (tanpa request
+   Dashboard mencatat sendiri tiap pembacaan live yang sukses
+   lewat fungsi serverless Vercel (/api/log), dan view Riwayat
+   membaca dari /api/history. Kredensial Turso TIDAK ada di
+   kode ini: fungsi serverless membacanya dari environment
+   variable Vercel, sehingga browser tidak pernah melihatnya.
+   Menumpang refresh Blynk yang sudah berjalan (tanpa request
    tambahan ke Blynk, jadi tidak membakar kuota riwayat Blynk).
-   View Riwayat membaca dari simpanan ini dulu; riwayat Blynk
-   tetap dipakai sebagai cadangan bila Supabase tidak disetel,
-   atau request-nya gagal.
+   Riwayat Blynk tetap dipakai sebagai cadangan bila /api gagal.
    ============================================================ */
 
 const HistoryLog = (() => {
-  const TABLE = 'moisture_history';
-  const PAGE = 20000;
-  const MAX_PAGES = 10;
   // Satu titik per menit, apa pun interval refresh yang dipilih.
   const MIN_GAP_MS = 60000;
   let lastRecordedAt = 0;
-
-  // null bila URL/kunci belum diisi; kunci disimpan di localStorage
-  // browser (form Pengaturan), tidak pernah ikut ke repo.
-  function configured() {
-    const url = (Settings.data.supabaseUrl || '').replace(/\/+$/, '');
-    const key = Settings.data.supabaseKey || '';
-    return url !== '' && key !== '' ? { url, key } : null;
-  }
-
-  function headers(cfg) {
-    return {
-      'apikey': cfg.key,
-      'Authorization': 'Bearer ' + cfg.key,
-      'Content-Type': 'application/json'
-    };
-  }
 
   // Catat satu titik. Gagal diam-diam (return false) supaya tidak
   // pernah mengganggu pemantauan live. Dipanggil setelah refresh
   // sukses; moisture null (baca gagal) tidak dicatat.
   async function maybeRecord(point) {
-    const cfg = configured();
-    if (!cfg || point.moisture === null || point.moisture === undefined) return false;
+    if (point.moisture === null || point.moisture === undefined) return false;
     const now = Date.now();
     if (now - lastRecordedAt < MIN_GAP_MS) return false;
     lastRecordedAt = now;
     try {
-      const res = await fetch(cfg.url + '/rest/v1/' + TABLE, {
+      const res = await fetch('/api/log', {
         method: 'POST',
-        headers: Object.assign(headers(cfg), { 'Prefer': 'return=minimal' }),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ts: new Date(now).toISOString(),
           moisture: point.moisture,
@@ -59,79 +41,56 @@ const HistoryLog = (() => {
     }
   }
 
-  // Rata-ratakan per jam (WEEK) atau per hari (THREE_MONTHS) supaya
-  // grafik tetap ringan; DAY memakai titik mentah per menit.
-  function bucketize(points, period) {
-    if (period === 'DAY' || points.length === 0) return points;
-    const bucketMs = period === 'WEEK' ? 3600000 : 86400000;
-    const buckets = new Map();
-    for (const [d, v] of points) {
-      const k = Math.floor(d.getTime() / bucketMs);
-      if (!buckets.has(k)) buckets.set(k, { sum: 0, n: 0 });
-      const b = buckets.get(k);
-      b.sum += v; b.n++;
-    }
-    return [...buckets.entries()]
-      .sort((a, b) => a[0] - b[0])
-      .map(([k, b]) => [new Date(k * bucketMs), b.sum / b.n]);
-  }
-
-  // Ambil titik-titik Supabase untuk satu periode.
-  // @returns {Promise<{ok, configured, points:[[Date, number]]>}}
-  // ok=false bila request gagal; configured=false bila Supabase
-  // tidak disetel.
+  // Ambil titik-titik untuk satu periode. Agregasi (rata-rata per
+  // jam untuk WEEK, per hari untuk THREE_MONTHS) sudah dilakukan
+  // di SQL oleh /api/history, jadi klien tinggal memetakan.
+  // @returns {Promise<{ok, configured, points:[[Date, number]], error}>}}
+  // ok=false bila request gagal (app.js lalu memakai cadangan Blynk).
   async function fetchPoints(period) {
-    const cfg = configured();
-    if (!cfg) return { ok: false, configured: false, points: [] };
-    const days = period === 'THREE_MONTHS' ? 90 : (period === 'WEEK' ? 7 : 1);
-    const from = new Date(Date.now() - days * 86400000).toISOString();
-    const rows = [];
     try {
-      for (let page = 0; page < MAX_PAGES; page++) {
-        const url = cfg.url + '/rest/v1/' + TABLE +
-          '?select=ts,moisture&ts=gte.' + encodeURIComponent(from) +
-          '&order=ts.asc&limit=' + PAGE + '&offset=' + (page * PAGE);
-        const res = await fetch(url, { headers: headers(cfg) });
-        if (!res.ok) return { ok: false, configured: true, points: [] };
-        const chunk = await res.json();
-        if (!Array.isArray(chunk) || chunk.length === 0) break;
-        rows.push(...chunk);
-        if (chunk.length < PAGE) break;
-      }
-    } catch (e) {
-      return { ok: false, configured: true, points: [] };
-    }
-    const points = rows
-      .map((r) => {
-        const t = new Date(r.ts).getTime();
-        const v = parseFloat(r.moisture);
-        return (isNaN(t) || isNaN(v)) ? null : [new Date(t), v];
-      })
-      .filter(Boolean)
-      .sort((a, b) => a[0] - b[0]);
-    return { ok: true, configured: true, points: bucketize(points, period) };
-  }
-
-  // Tes koneksi + keberadaan tabel: SELECT satu baris saja.
-  // @returns {Promise<{ok, status, error}>}
-  async function test() {
-    const cfg = configured();
-    if (!cfg) return { ok: false, status: 0, error: 'URL atau kunci Supabase belum diisi.' };
-    try {
-      const res = await fetch(cfg.url + '/rest/v1/' + TABLE + '?select=id&limit=1', { headers: headers(cfg) });
+      const res = await fetch('/api/history?period=' + encodeURIComponent(period));
       if (!res.ok) {
-        let msg = 'HTTP ' + res.status;
+        let error = 'HTTP ' + res.status;
         try {
           const j = await res.json();
-          if (j && j.message) msg = j.message;
+          if (j && j.error) error = j.error;
         } catch (e) { /* pakai HTTP */ }
-        return { ok: false, status: res.status, error: msg };
+        return { ok: false, configured: true, points: [], error };
       }
-      return { ok: true, status: res.status, error: '' };
+      const j = await res.json();
+      const points = (Array.isArray(j.points) ? j.points : [])
+        .map((p) => {
+          const t = new Date(p.ts).getTime();
+          const v = parseFloat(p.moisture);
+          return (isNaN(t) || isNaN(v)) ? null : [new Date(t), v];
+        })
+        .filter(Boolean)
+        .sort((a, b) => a[0] - b[0]);
+      return { ok: true, configured: true, points };
+    } catch (e) {
+      return { ok: false, configured: true, points: [], error: e.message || 'Koneksi gagal' };
+    }
+  }
+
+  // Tes koneksi + keberadaan tabel: baca riwayat DAY.
+  // @returns {Promise<{ok, status, error, count}>}
+  async function test() {
+    try {
+      const res = await fetch('/api/history?period=DAY');
+      if (!res.ok) {
+        let error = 'HTTP ' + res.status;
+        try {
+          const j = await res.json();
+          if (j && j.error) error = j.error;
+        } catch (e) { /* pakai HTTP */ }
+        return { ok: false, status: res.status, error };
+      }
+      const j = await res.json();
+      return { ok: true, status: res.status, error: '', count: Array.isArray(j.points) ? j.points.length : 0 };
     } catch (e) {
       return { ok: false, status: 0, error: e.message || 'Koneksi gagal' };
     }
   }
 
-  return { configured, maybeRecord, fetchPoints, test };
+  return { maybeRecord, fetchPoints, test };
 })();
