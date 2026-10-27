@@ -10,7 +10,9 @@ const AppConfig = {
   defaults: {
     token: '',
     server: 'https://blynk.cloud',
-    interval: 15 // detik
+    interval: 15, // detik
+    supabaseUrl: '',
+    supabaseKey: ''
   },
 
   // Pemetaan datastream Blynk (virtual pin)

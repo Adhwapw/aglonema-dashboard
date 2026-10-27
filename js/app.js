@@ -96,6 +96,10 @@ const App = (() => {
     $('serverInfo').textContent = Settings.data.server.replace(/^https?:\/\//, '');
     const iv = Settings.data.interval;
     $('intervalInfo').textContent = iv >= 60 ? (iv / 60) + ' menit' : iv + ' detik';
+
+    // Catat titik riwayat mandiri bila batch live sukses (tanpa
+    // request tambahan; gagal dicatat tidak mengganggu apa pun).
+    if (rM.ok) HistoryLog.maybeRecord({ moisture: state.moisture, pump: state.pumpOn, auto: state.autoMode });
   }
 
   function restartTimer() {
@@ -178,6 +182,21 @@ const App = (() => {
   }
 
   async function loadHistory(chart, period) {
+    // 1. Coba riwayat mandiri Supabase dulu (tidak membakar kuota Blynk).
+    const s = await HistoryLog.fetchPoints(period);
+    if (s.ok && s.points.length > 0) {
+      Charts.setHistory(chart, s.points);
+      return;
+    }
+    if (s.configured && s.ok) {
+      // Supabase disetel dan menjawab, tapi tabel masih kosong: jangan
+      // jatuh ke error Blynk yang menyesatkan, beri tahu apa adanya.
+      Charts.setHistory(chart, []);
+      UI.show(UI.alert('info', '<strong>Belum ada data riwayat.</strong> Pencatatan Supabase baru dimulai; grafik terisi seiring data masuk (satu titik per menit selama dashboard dibuka).'));
+      return;
+    }
+    // 2. Cadangan: riwayat Blynk seperti sebelumnya (dipakai bila
+    // Supabase tidak disetel, atau request-nya gagal).
     if (!Settings.data.token) {
       UI.show(UI.buildSmartAlerts(null, null, false));
       return;
@@ -196,12 +215,16 @@ const App = (() => {
     $('tokenInput').value = Settings.data.token;
     $('serverInput').value = Settings.data.server;
     $('intervalSelect').value = String(Settings.data.interval);
+    $('supabaseUrlInput').value = Settings.data.supabaseUrl || '';
+    $('supabaseKeyInput').value = Settings.data.supabaseKey || '';
 
     $('saveBtn').addEventListener('click', async () => {
       Settings.save({
         token: $('tokenInput').value.trim(),
         server: $('serverInput').value.trim() || AppConfig.defaults.server,
-        interval: parseInt($('intervalSelect').value, 10) || 60
+        interval: parseInt($('intervalSelect').value, 10) || 60,
+        supabaseUrl: $('supabaseUrlInput').value.trim(),
+        supabaseKey: $('supabaseKeyInput').value.trim()
       });
       restartTimer();
       await Promise.allSettled([refresh(), loadHistory(Charts.getMini(), 'DAY')]);
@@ -228,6 +251,26 @@ const App = (() => {
           (m.ok && m.value !== null ? ', kelembapan terbaca ' + m.value.toFixed(0) + '%.' : '.')));
       } else {
         UI.show(UI.alert('danger', '<strong>Tes koneksi gagal.</strong> ' + BlynkApi.errorHint(c.status)));
+      }
+    });
+
+    // Tes Supabase memakai nilai form (belum tentu tersimpan), pola
+    // yang sama seperti Tes Koneksi di atas.
+    $('supabaseTestBtn').addEventListener('click', async () => {
+      const bakUrl = Settings.data.supabaseUrl;
+      const bakKey = Settings.data.supabaseKey;
+      Settings.data.supabaseUrl = $('supabaseUrlInput').value.trim();
+      Settings.data.supabaseKey = $('supabaseKeyInput').value.trim();
+
+      const t = await HistoryLog.test();
+
+      Settings.data.supabaseUrl = bakUrl;
+      Settings.data.supabaseKey = bakKey;
+
+      if (t.ok) {
+        UI.show(UI.alert('success', '<strong>Supabase terhubung.</strong> Tabel riwayat ditemukan dan bisa dibaca.'));
+      } else {
+        UI.show(UI.alert('danger', '<strong>Tes Supabase gagal.</strong> ' + t.error + (t.status === 404 ? ' Periksa apakah tabel moisture_history sudah dibuat.' : '')));
       }
     });
   }
