@@ -20,9 +20,9 @@ const Charts = (() => {
         axisLine: { roundCap: true, lineStyle: { width: 16, color: GAUGE_ZONES } },
         pointer: { show: true, length: '48%', width: 4, itemStyle: { color: '#334155' } },
         anchor: { show: true, size: 14, itemStyle: { color: '#334155', borderColor: '#fff', borderWidth: 2 } },
-        axisTick: { distance: -22, length: 6, lineStyle: { color: '#94a3b8', width: 1.5 } },
-        splitLine: { distance: -26, length: 10, lineStyle: { color: '#94a3b8', width: 2 } },
-        axisLabel: { distance: -6, color: '#64748b', fontSize: 10 },
+        axisTick: { distance: -22, length: 6, lineStyle: { color: '#64748b', width: 1.5 } },
+        splitLine: { distance: -26, length: 10, lineStyle: { color: '#64748b', width: 2 } },
+        axisLabel: { distance: -6, color: '#475569', fontSize: 10 },
         title: { show: false },
         detail: {
           valueAnimation: true, offsetCenter: [0, '44%'],
@@ -36,12 +36,12 @@ const Charts = (() => {
   function historyOption(seriesData) {
     return {
       tooltip: { trigger: 'axis', valueFormatter: (v) => v + '%' },
-      legend: { bottom: 0, textStyle: { color: '#64748b', fontSize: 12 } },
+      legend: { bottom: 0, textStyle: { color: '#475569', fontSize: 12 } },
       grid: { left: 10, right: 18, top: 30, bottom: 52, containLabel: true },
-      xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 11, hideOverlap: true } },
+      xAxis: { type: 'time', axisLabel: { color: '#475569', fontSize: 11, hideOverlap: true } },
       yAxis: {
         type: 'value', min: 0, max: 100,
-        axisLabel: { formatter: '{value}%', color: '#64748b', fontSize: 11 },
+        axisLabel: { formatter: '{value}%', color: '#475569', fontSize: 11 },
         splitLine: { lineStyle: { color: '#e2e8f0' } }
       },
       series: seriesData.map((s, i) => ({
@@ -52,7 +52,7 @@ const Charts = (() => {
         markArea: i === 0 ? {
           silent: true,
           itemStyle: { color: 'rgba(22,163,74,0.08)' },
-          label: { show: true, position: 'insideTopRight', color: '#15803d', fontSize: 11, formatter: 'Zona optimal' },
+          label: { show: true, position: 'insideTopRight', color: '#065f46', fontSize: 11, formatter: 'Zona optimal' },
           data: [[{ yAxis: AppConfig.optimalMin }, { yAxis: AppConfig.optimalMax }]]
         } : undefined
       }))
@@ -80,7 +80,7 @@ const Charts = (() => {
   function setHistory(chart, points) {
     if (!chart) return; // ECharts gagal dimuat (CDN terblokir): jangan crash
     chart.setOption(historyOption([
-      { name: 'Kelembapan tanah', color: '#059669', points }
+      { name: 'Kelembapan tanah', color: '#047857', points }
     ]), true);
   }
 

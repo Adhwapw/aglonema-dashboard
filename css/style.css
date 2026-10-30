@@ -93,6 +93,9 @@ body {
   font-family: "Plus Jakarta Sans", -apple-system, sans-serif;
   font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* min-width 0 agar judul bisa mengecil dan terpotong dengan elipsis
+     di layar sempit, bukan mendorong badge dan tombol keluar layar. */
+  min-width: 0;
 }
 .icon-btn {
   padding: .75rem; min-width: 44px; min-height: 44px; border-radius: .6rem; color: #475569;
@@ -113,7 +116,7 @@ body {
   font-family: "Plus Jakarta Sans", -apple-system, sans-serif;
   font-size: .95rem; font-weight: 700; color: #0f172a; margin: 0;
 }
-.card-sub { font-size: .78rem; color: #64748b; margin: 0; }
+.card-sub { font-size: .78rem; color: #475569; margin: 0; }
 
 /* ---------- Badge & dot ---------- */
 .badge {
@@ -198,7 +201,7 @@ body {
 
 /* ---------- Zona list ---------- */
 .zone-row { display: flex; align-items: center; gap: .75rem; }
-.zone-label { text-align: center; font-size: .875rem; font-weight: 600; color: #64748b; margin: 0; }
+.zone-label { text-align: center; font-size: .875rem; font-weight: 600; color: #475569; margin: 0; }
 
 /* Lucide icon sizing default */
 .lucide { stroke-width: 2; }

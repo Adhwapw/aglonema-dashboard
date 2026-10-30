@@ -54,13 +54,13 @@ const UI = (() => {
   function setDevicePill(online) {
     const el = $('deviceStatus');
     if (online === true) {
-      el.innerHTML = '<span class="dot bg-green-600"></span>Online';
+      el.innerHTML = '<span class="dot bg-green-700"></span>Online';
       el.className = 'badge badge-green';
     } else if (online === false) {
-      el.innerHTML = '<span class="dot bg-red-600"></span>Offline';
+      el.innerHTML = '<span class="dot bg-red-700"></span>Offline';
       el.className = 'badge badge-red';
     } else {
-      el.innerHTML = '<span class="dot bg-slate-400"></span>Tidak diketahui';
+      el.innerHTML = '<span class="dot bg-slate-500"></span>Tidak diketahui';
       el.className = 'badge badge-gray';
     }
   }
@@ -147,22 +147,33 @@ const UI = (() => {
           $('view-' + k).classList.toggle('hidden', k !== v);
         });
         $('pageTitle').textContent = TITLES[v];
-        closeSidebar();
+        closeSidebar(true);
         if (onSwitch) onSwitch(v);
       });
     });
     $('menuBtn').addEventListener('click', openSidebar);
-    $('sidebarOverlay').addEventListener('click', closeSidebar);
+    $('sidebarOverlay').addEventListener('click', () => closeSidebar(true));
+    // Escape menutup sidebar mobile dan mengembalikan fokus ke tombol Menu,
+    // supaya pengguna keyboard tidak terjebak di menu yang sudah tertutup.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (window.innerWidth >= 768) return;
+      if ($('sidebarOverlay').classList.contains('hidden')) return;
+      closeSidebar(true);
+    });
   }
 
   function openSidebar() {
     $('sidebar').style.transform = 'translateX(0)';
     $('sidebarOverlay').classList.remove('hidden');
+    $('menuBtn').setAttribute('aria-expanded', 'true');
   }
-  function closeSidebar() {
+  function closeSidebar(returnFocus) {
     if (window.innerWidth < 768) {
       $('sidebar').style.transform = '';
       $('sidebarOverlay').classList.add('hidden');
+      $('menuBtn').setAttribute('aria-expanded', 'false');
+      if (returnFocus) $('menuBtn').focus();
     }
   }
 

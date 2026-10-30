@@ -96,13 +96,13 @@
   <div class="flex-1 flex flex-col min-w-0">
 
     <header class="topbar">
-      <button id="menuBtn" class="icon-btn md:hidden" aria-label="Menu">
+      <button id="menuBtn" class="icon-btn md:hidden" aria-label="Menu" aria-controls="sidebar" aria-expanded="false">
         <i data-lucide="menu"></i><span class="text-sm font-medium">Menu</span>
       </button>
       <h1 id="pageTitle" class="page-title">Dashboard</h1>
       <div class="ml-auto flex items-center gap-2 md:gap-3">
-        <span id="deviceStatus" class="badge badge-gray"><span class="dot bg-slate-400"></span>Memeriksa...</span>
-        <span id="lastUpdate" class="hidden lg:inline text-xs text-slate-500"></span>
+        <span id="deviceStatus" class="badge badge-gray"><span class="dot bg-slate-500"></span>Memeriksa...</span>
+        <span id="lastUpdate" class="hidden lg:inline text-xs text-slate-600"></span>
         <button id="refreshBtn" class="btn btn-outline btn-sm" title="Muat ulang sekarang">
           <i data-lucide="refresh-cw"></i><span class="hidden sm:inline">Refresh</span>
         </button>
@@ -144,7 +144,7 @@
               <button id="pumpBtn" class="btn btn-green w-full" disabled>
                 <i data-lucide="power"></i><span>Nyalakan Pompa</span>
               </button>
-              <p id="pumpNote" class="text-xs text-slate-500 mt-2 leading-relaxed" style="display:none">Mode otomatis aktif, tombol pompa dinonaktifkan.</p>
+              <p id="pumpNote" class="text-xs text-slate-600 mt-2 leading-relaxed" style="display:none">Mode otomatis aktif, tombol pompa dinonaktifkan.</p>
             </div>
           </div>
 
@@ -153,7 +153,7 @@
             <p class="card-sub mb-4">Berdasarkan riset</p>
             <ul id="zoneList" class="space-y-3 text-sm"><!-- diisi dari AppConfig.zones oleh UI.renderZoneList() --></ul>
             <div class="mt-4 pt-4 border-t border-slate-200">
-              <p class="text-xs text-slate-500 leading-relaxed">Zona optimal 55%&ndash;65%: Karenza et al. (2025). Batas 40% dan 80% ditetapkan tim.</p>
+              <p class="text-xs text-slate-600 leading-relaxed">Zona optimal 55%&ndash;65%: Karenza et al. (2025). Batas 40% dan 80% ditetapkan tim.</p>
             </div>
           </div>
         </div>
@@ -174,11 +174,11 @@
             <p class="card-title mb-1">Perangkat</p>
             <p class="card-sub mb-4">Informasi koneksi</p>
             <dl class="space-y-3 text-sm">
-              <div class="flex justify-between"><dt class="text-slate-500">Hardware</dt><dd class="font-semibold text-slate-800">ESP32</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">Platform</dt><dd class="font-semibold text-slate-800">Blynk IoT</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">Server</dt><dd id="serverInfo" class="font-semibold text-slate-800 truncate max-w-[10rem]">-</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">Refresh otomatis</dt><dd id="intervalInfo" class="font-semibold text-slate-800">-</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">Datastream</dt><dd class="font-semibold text-slate-800 text-right">V0 sensor<br />V1 pompa &middot; V4 status &middot; V5 mode</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-600">Hardware</dt><dd class="font-semibold text-slate-800">ESP32</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-600">Platform</dt><dd class="font-semibold text-slate-800">Blynk IoT</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-600">Server</dt><dd id="serverInfo" class="font-semibold text-slate-800 truncate max-w-[10rem]">-</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-600">Refresh otomatis</dt><dd id="intervalInfo" class="font-semibold text-slate-800">-</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-600">Datastream</dt><dd class="font-semibold text-slate-800 text-right">V0 sensor<br />V1 pompa &middot; V4 status &middot; V5 mode</dd></div>
             </dl>
           </div>
         </div>
@@ -215,12 +215,12 @@
             <div>
               <label class="form-label" for="tokenInput">Device Auth Token</label>
               <input type="password" id="tokenInput" class="form-input" placeholder="Tempel auth token dari Blynk.Console" autocomplete="off" />
-              <p class="text-xs text-slate-500 mt-1">Blynk.Console &rarr; Devices &rarr; pilih device &rarr; Device Info.</p>
+              <p class="text-xs text-slate-600 mt-1">Blynk.Console &rarr; Devices &rarr; pilih device &rarr; Device Info.</p>
             </div>
             <div>
               <label class="form-label" for="serverInput">Server Blynk</label>
               <input type="text" id="serverInput" class="form-input" placeholder="https://blynk.cloud" />
-              <p class="text-xs text-slate-500 mt-1">Server akun ini adalah https://blynk.cloud. Jangan pindah ke region lain, data live bisa terputus.</p>
+              <p class="text-xs text-slate-600 mt-1">Server akun ini adalah https://blynk.cloud. Jangan pindah ke region lain, data live bisa terputus.</p>
             </div>
             <div>
               <label class="form-label" for="intervalSelect">Interval refresh otomatis</label>
@@ -233,11 +233,11 @@
                 <option value="120">2 menit</option>
                 <option value="300">5 menit</option>
               </select>
-              <p class="text-xs text-slate-500 mt-1">Interval pendek tidak membuat data lebih baru dari interval kirim ESP32 ke Blynk.</p>
+              <p class="text-xs text-slate-600 mt-1">Interval pendek tidak membuat data lebih baru dari interval kirim ESP32 ke Blynk.</p>
             </div>
             <div class="border-t border-slate-200 pt-4">
               <p class="form-label">Riwayat Turso</p>
-              <p class="text-xs text-slate-500 mb-3">Dashboard mencatat sendiri tiap pembacaan live ke database Turso lewat fungsi serverless Vercel (satu titik per menit), dan view Riwayat membaca dari sana. Kredensial database tidak tersimpan di browser ini, jadi tidak ada yang perlu diisi di sini.</p>
+              <p class="text-xs text-slate-600 mb-3">Dashboard mencatat sendiri tiap pembacaan live ke database Turso lewat fungsi serverless Vercel (satu titik per menit), dan view Riwayat membaca dari sana. Kredensial database tidak tersimpan di browser ini, jadi tidak ada yang perlu diisi di sini.</p>
             </div>
             <div class="flex flex-wrap gap-2 pt-1">
               <button id="saveBtn" class="btn btn-green">Simpan Pengaturan</button>
