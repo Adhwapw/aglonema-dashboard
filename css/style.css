@@ -62,12 +62,12 @@ body {
   font-weight: 800; font-size: 1rem; letter-spacing: -.01em;
   color: #f1f5f9; line-height: 1.2; margin: 0;
 }
-.brand-sub { font-size: .72rem; color: #64748b; margin: 0; }
+.brand-sub { font-size: .72rem; color: #94a3b8; margin: 0; }
 
 .sidebar-nav { flex: 1; padding: 1rem; display: flex; flex-direction: column; gap: .25rem; }
 .nav-link {
   display: flex; align-items: center; gap: .75rem;
-  padding: .65rem .9rem; border-radius: .6rem;
+  padding: .8rem .9rem; min-height: 44px; border-radius: .6rem;
   color: #94a3b8; font-size: .9rem; font-weight: 500;
   cursor: pointer; transition: background-color .15s ease, color .15s ease;
 }
@@ -78,7 +78,7 @@ body {
 .sidebar-foot {
   padding: 1rem 1.25rem;
   border-top: 1px solid #1c222c;
-  font-size: .75rem; color: #64748b; line-height: 1.6;
+  font-size: .75rem; color: #94a3b8; line-height: 1.6;
 }
 
 /* ---------- Topbar ---------- */
@@ -95,8 +95,8 @@ body {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .icon-btn {
-  padding: .5rem; border-radius: .6rem; color: #475569;
-  display: inline-flex; align-items: center; justify-content: center;
+  padding: .75rem; min-width: 44px; min-height: 44px; border-radius: .6rem; color: #475569;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
 }
 .icon-btn:hover { background: #f1f5f9; }
 .icon-btn svg { width: 1.25rem; height: 1.25rem; }
@@ -106,6 +106,9 @@ body {
   background: #fff; border: 1px solid #e2e8f0; border-radius: .9rem;
   box-shadow: 0 1px 3px rgba(15, 23, 42, .06);
 }
+/* Kartu utama: gauge kelembapan adalah keputusan utama di layar ini,
+   jadi ia dibedakan dengan tint hijau pucat, bukan dengan glow atau bayangan ekstra. */
+.card-main { background: #f0fdf4; border-color: #a7f3d0; }
 .card-title {
   font-family: "Plus Jakarta Sans", -apple-system, sans-serif;
   font-size: .95rem; font-weight: 700; color: #0f172a; margin: 0;
@@ -128,14 +131,21 @@ body {
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   font-weight: 600; font-size: .875rem; font-family: inherit;
-  border-radius: .6rem; padding: .65rem 1rem;
+  border-radius: .6rem; padding: .65rem 1rem; min-height: 44px;
   cursor: pointer; border: 1px solid transparent;
   transition: background-color .15s ease;
 }
 .btn svg { width: 1rem; height: 1rem; }
-.btn-sm { padding: .45rem .8rem; font-size: .8rem; }
-.btn-green { background: #059669; color: #fff; }
-.btn-green:hover { background: #047857; }
+.btn-sm { padding: .55rem .9rem; font-size: .8rem; min-height: 44px; }
+/* Hijau tombol digelapkan dari #059669 ke #047857 agar teks putih lolos
+   kontras WCAG AA (5,48:1, dicek dengan contrast-check.py). */
+.btn-green { background: #047857; color: #fff; }
+.btn-green:hover { background: #065f46; }
+/* Indikator fokus keyboard yang terlihat, untuk tombol, navigasi, dan penutup alert. */
+.btn:focus-visible, .nav-link:focus-visible, .icon-btn:focus-visible,
+.alert .close:focus-visible, .switch input:focus-visible + .slider {
+  outline: 2px solid #059669; outline-offset: 2px;
+}
 .btn-red { background: #dc2626; color: #fff; }
 .btn-red:hover { background: #b91c1c; }
 .btn-outline { background: #fff; color: #334155; border-color: #cbd5e1; }
@@ -155,10 +165,13 @@ body {
 .form-label { display: block; font-size: .8rem; font-weight: 600; color: #334155; margin-bottom: .35rem; }
 
 /* ---------- Toggle switch ---------- */
-.switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+/* Area sentuh switch dibuat setinggi 44px, sementara visual slider tetap 24px
+   dan dipusatkan secara vertikal, agar mudah ditekan dengan jempol. */
+.switch { position: relative; display: inline-flex; align-items: center; width: 44px; height: 44px; flex-shrink: 0; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider {
-  position: absolute; cursor: pointer; inset: 0;
+  position: absolute; cursor: pointer; left: 0; right: 0; top: 50%; height: 24px;
+  transform: translateY(-50%);
   background: #cbd5e1; border-radius: 9999px;
   transition: background-color .2s ease;
 }

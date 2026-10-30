@@ -69,7 +69,7 @@ const UI = (() => {
     const el = $('zoneLabel');
     if (value === null || value === undefined) {
       el.textContent = 'Tidak ada data';
-      el.style.color = '#94a3b8';
+      el.style.color = '#475569';
       return;
     }
     const z = zoneOf(value);

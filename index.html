@@ -59,7 +59,7 @@
     </g>
   </svg>
   <p class="splash-title">TETRASENSE</p>
-  <p class="splash-sub">Smart Soil Monitoring</p>
+  <p class="splash-sub">Monitoring Tanah Aglonema</p>
   <div class="splash-bar"><span></span></div>
 </div>
 
@@ -71,7 +71,7 @@
     <div class="brand">
       <div>
         <p class="brand-title">TetraSense</p>
-        <p class="brand-sub">Soil Moisture IoT</p>
+        <p class="brand-sub">Monitoring Aglonema</p>
       </div>
     </div>
 
@@ -97,7 +97,7 @@
 
     <header class="topbar">
       <button id="menuBtn" class="icon-btn md:hidden" aria-label="Menu">
-        <i data-lucide="menu"></i>
+        <i data-lucide="menu"></i><span class="text-sm font-medium">Menu</span>
       </button>
       <h1 id="pageTitle" class="page-title">Dashboard</h1>
       <div class="ml-auto flex items-center gap-2 md:gap-3">
@@ -114,9 +114,9 @@
 
       <!-- ===== VIEW: DASHBOARD ===== -->
       <section id="view-dashboard" class="space-y-5">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-          <div class="card p-5">
+          <div class="card card-main p-5">
             <p class="card-title">Kelembapan Tanah</p>
             <p class="card-sub mb-1">Sensor &middot; persen</p>
             <div id="gaugeMoist" class="gauge-box"></div>
@@ -148,7 +148,7 @@
             </div>
           </div>
 
-          <div class="card p-5">
+          <div class="card p-5 md:col-span-2 lg:col-span-1">
             <p class="card-title mb-1">Zona Kelembapan Aglonema</p>
             <p class="card-sub mb-4">Berdasarkan riset</p>
             <ul id="zoneList" class="space-y-3 text-sm"><!-- diisi dari AppConfig.zones oleh UI.renderZoneList() --></ul>
@@ -249,7 +249,7 @@
         </div>
       </section>
 
-      <footer class="text-center text-xs text-slate-400 pt-2 pb-4">
+      <footer class="text-center text-xs text-slate-600 pt-2 pb-4">
         Data live via Blynk IoT HTTPS API &middot; Riwayat via Turso &middot; Zona optimal 55% &ndash; 65% (Karenza et al., 2025)
       </footer>
     </main>
